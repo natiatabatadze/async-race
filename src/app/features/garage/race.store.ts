@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { EngineService } from '../../core/services/engine.service';
 import { CarRaceState } from '../../core/models/car.model';
 import { Car } from '../../core/models/car.model';
+import { WinnersService } from '../../core/services/winners.service';
 
 const FINISH_POSITION = 90;
 const START_POSITION = 0;
@@ -13,6 +14,7 @@ export class RaceStore {
   readonly states = signal<Map<number, CarRaceState>>(new Map());
 
   private readonly startTimes = new Map<number, number>();
+  private readonly winnersService = inject(WinnersService);
 
   startEngine(id: number): void {
     this.engineService.toggleEngine(id, 'started').subscribe((res) => {
@@ -93,10 +95,13 @@ export class RaceStore {
     });
   }
 
+
+
   private finish(car: Car, duration: number): void {
     if (!this.raceActive || this.winner()) return;
     this.raceActive = false;
     const seconds = Number((duration / 1000).toFixed(2));
     this.winner.set({ car, time: seconds });
+    this.winnersService.saveWinner(car.id, seconds).subscribe();
   }
 }

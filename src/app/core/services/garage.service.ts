@@ -41,5 +41,9 @@ export class GarageService {
     const requests = cars.map((car) => this.createCar(car));
     return forkJoin(requests);
   }
+
+  getCar(id: number): Observable<Car> {
+    return this.http.get<Car>(`${API_ENDPOINTS.garage}/${id}`);
+  }
   
 }

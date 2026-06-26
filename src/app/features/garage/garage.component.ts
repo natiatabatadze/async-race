@@ -55,7 +55,7 @@ export class GarageComponent implements OnInit {
   }
 
   onStartRace(): void {
-    this.raceStore.startRace(this.store.cars());   // ids-ის ნაცვლად მთელი მანქანები
+    this.raceStore.startRace(this.store.cars());
   }
 
   onResetRace(): void {
