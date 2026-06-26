@@ -1,3 +1,9 @@
+@if (raceStore.winner(); as winner) {
+  <div class="winner-banner">
+    🏆 {{ winner.car.name }} won! ({{ winner.time }}s)
+  </div>
+}
+
 <h1>Garage ({{ store.total() }})</h1>
 
 <div class="create-panel">
@@ -17,15 +23,45 @@
   <button (click)="store.generateRandomCars()">Generate 100 cars</button>
 </div>
 
+<div class="race-controls">
+  <button (click)="onStartRace()">Start Race</button>
+  <button (click)="onResetRace()">Reset Race</button>
+  <button (click)="store.generateRandomCars()">Generate 100 cars</button>
+</div>
+
 @if (store.cars().length === 0) {
-  <p>No cars in garage</p>
+  <p>🚗 No cars in garage. Create one or generate 100!</p>
 } @else {
   @for (car of store.cars(); track car.id) {
     <div class="car-row">
-      <span [style.color]="car.color">⬤</span>
-      <span>{{ car.name }}</span>
-      <button (click)="onEdit(car)">Select</button>
-      <button (click)="store.deleteCar(car.id)">Remove</button>
+      <div class="car-controls">
+        <button (click)="onEdit(car)">Select</button>
+        <button (click)="store.deleteCar(car.id)">Remove</button>
+        <button
+          (click)="raceStore.startEngine(car.id)"
+          [disabled]="raceStore.getState(car.id).status !== 'idle'"
+        >
+          A
+        </button>
+        <button
+          (click)="raceStore.stopEngine(car.id)"
+          [disabled]="raceStore.getState(car.id).status === 'idle'"
+        >
+          B
+        </button>
+      </div>
+
+      <div class="track">
+       <div
+          class="car-icon"
+          [style.color]="car.color"
+          [style.left.%]="raceStore.getState(car.id).position"
+          [style.transition]="'left ' + raceStore.getState(car.id).duration + 'ms linear'"
+        >
+          🚗
+        </div>
+        <span class="car-name">{{ car.name }}</span>
+      </div>
     </div>
   }
 }

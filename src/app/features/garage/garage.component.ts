@@ -6,6 +6,7 @@ import {
   CAR_NAME_MAX_LENGTH,
   DEFAULT_CAR_COLOR,
 } from '../../core/constants/validation.constants';
+import { RaceStore } from './race.store';
 
 @Component({
   selector: 'app-garage',
@@ -16,6 +17,7 @@ import {
 })
 export class GarageComponent implements OnInit {
   readonly store = inject(GarageStore);
+  readonly raceStore = inject(RaceStore);
   readonly maxLength = CAR_NAME_MAX_LENGTH;
 
   name = '';
@@ -50,5 +52,14 @@ export class GarageComponent implements OnInit {
     this.name = '';
     this.color = DEFAULT_CAR_COLOR;
     this.editingId.set(null);
+  }
+
+  onStartRace(): void {
+    this.raceStore.startRace(this.store.cars());   // ids-ის ნაცვლად მთელი მანქანები
+  }
+
+  onResetRace(): void {
+    const ids = this.store.cars().map((car) => car.id);
+    this.raceStore.resetRace(ids);
   }
 }

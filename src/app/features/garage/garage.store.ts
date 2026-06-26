@@ -48,7 +48,16 @@ export class GarageStore {
   }
 
   deleteCar(id: number): void {
-    this.garageService.deleteCar(id).subscribe(() => this.loadCars());
+    this.garageService.deleteCar(id).subscribe(() => this.reloadAfterDelete());
+  }
+
+  private reloadAfterDelete(): void {
+    const isLastOnPage = this.cars().length === 1;
+    const isNotFirstPage = this.page() > 1;
+    if (isLastOnPage && isNotFirstPage) {
+      this.page.set(this.page() - 1);
+    }
+    this.loadCars();
   }
 
   generateRandomCars(): void {
