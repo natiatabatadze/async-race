@@ -2,6 +2,8 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { Car } from '../../core/models/car.model';
 import { GarageService } from '../../core/services/garage.service';
 import { CARS_PER_PAGE } from '../../core/constants/api.constants';
+import { randomCarName, randomColor } from '../../core/utils/random.util';
+import { RANDOM_CARS_COUNT } from '../../core/constants/car-names.constants';
 
 @Injectable({ providedIn: 'root' })
 export class GarageStore {
@@ -25,6 +27,18 @@ export class GarageStore {
     this.loadCars();
   }
 
+  nextPage(): void {
+    if (this.page() < this.totalPages()) {
+      this.setPage(this.page() + 1);
+    }
+  }
+
+  prevPage(): void {
+    if (this.page() > 1) {
+      this.setPage(this.page() - 1);
+    }
+  }
+
   createCar(name: string, color: string): void {
     this.garageService.createCar({ name, color }).subscribe(() => this.loadCars());
   }
@@ -35,5 +49,13 @@ export class GarageStore {
 
   deleteCar(id: number): void {
     this.garageService.deleteCar(id).subscribe(() => this.loadCars());
+  }
+
+  generateRandomCars(): void {
+    const cars = Array.from({ length: RANDOM_CARS_COUNT }, () => ({
+      name: randomCarName(),
+      color: randomColor(),
+    }));
+    this.garageService.createCars(cars).subscribe(() => this.loadCars());
   }
 }

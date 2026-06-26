@@ -13,6 +13,10 @@
   </button>
 </div>
 
+<div class="race-controls">
+  <button (click)="store.generateRandomCars()">Generate 100 cars</button>
+</div>
+
 @if (store.cars().length === 0) {
   <p>No cars in garage</p>
 } @else {
@@ -25,3 +29,16 @@
     </div>
   }
 }
+
+<div class="pagination">
+  <button (click)="store.prevPage()" [disabled]="store.page() === 1">
+    Prev
+  </button>
+  <span>Page {{ store.page() }} / {{ store.totalPages() }}</span>
+  <button
+    (click)="store.nextPage()"
+    [disabled]="store.page() >= store.totalPages()"
+  >
+    Next
+  </button>
+</div>

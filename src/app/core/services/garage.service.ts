@@ -1,6 +1,6 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, map, forkJoin } from 'rxjs';
 import { Car } from '../models/car.model';
 import { API_ENDPOINTS, CARS_PER_PAGE } from '../constants/api.constants';
 
@@ -36,4 +36,10 @@ export class GarageService {
   deleteCar(id: number): Observable<void> {
     return this.http.delete<void>(`${API_ENDPOINTS.garage}/${id}`);
   }
+
+  createCars(cars: Omit<Car, 'id'>[]): Observable<Car[]> {
+    const requests = cars.map((car) => this.createCar(car));
+    return forkJoin(requests);
+  }
+  
 }
