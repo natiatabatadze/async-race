@@ -1,1 +1,27 @@
-<p>garage works</p>
+<h1>Garage ({{ store.total() }})</h1>
+
+<div class="create-panel">
+  <input
+    type="text"
+    [(ngModel)]="name"
+    placeholder="Car name"
+    [maxlength]="maxLength"
+  />
+  <input type="color" [(ngModel)]="color" />
+  <button (click)="onSubmit()" [disabled]="!isValid()">
+    {{ editingId() ? 'Update' : 'Create' }}
+  </button>
+</div>
+
+@if (store.cars().length === 0) {
+  <p>No cars in garage</p>
+} @else {
+  @for (car of store.cars(); track car.id) {
+    <div class="car-row">
+      <span [style.color]="car.color">⬤</span>
+      <span>{{ car.name }}</span>
+      <button (click)="onEdit(car)">Select</button>
+      <button (click)="store.deleteCar(car.id)">Remove</button>
+    </div>
+  }
+}
