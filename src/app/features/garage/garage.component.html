@@ -7,14 +7,10 @@
 <h1>Garage ({{ store.total() }})</h1>
 
 <div class="create-panel">
-  <input
-    type="text"
-    [(ngModel)]="name"
-    placeholder="Car name"
-    [maxlength]="maxLength"
-  />
-  <input type="color" [(ngModel)]="color" />
-  <button (click)="onSubmit()" [disabled]="!isValid()">
+  <input type="text" [(ngModel)]="name" placeholder="Car name"
+    [maxlength]="maxLength" [disabled]="raceStore.isRacing()" />
+  <input type="color" [(ngModel)]="color" [disabled]="raceStore.isRacing()" />
+  <button (click)="onSubmit()" [disabled]="!isValid() || raceStore.isRacing()">
     {{ editingId() ? 'Update' : 'Create' }}
   </button>
 </div>
@@ -24,9 +20,11 @@
 </div>
 
 <div class="race-controls">
-  <button (click)="onStartRace()">Start Race</button>
-  <button (click)="onResetRace()">Reset Race</button>
-  <button (click)="store.generateRandomCars()">Generate 100 cars</button>
+  <button (click)="onStartRace()" [disabled]="raceStore.isRacing()">Start Race</button>
+  <button (click)="onResetRace()" [disabled]="!raceStore.isRacing()">Reset Race</button>
+  <button (click)="store.generateRandomCars()" [disabled]="raceStore.isRacing()">
+    Generate 100 cars
+  </button>
 </div>
 
 @if (store.cars().length === 0) {
@@ -35,8 +33,8 @@
   @for (car of store.cars(); track car.id) {
     <div class="car-row">
       <div class="car-controls">
-        <button (click)="onEdit(car)">Select</button>
-        <button (click)="store.deleteCar(car.id)">Remove</button>
+        <button (click)="onEdit(car)" [disabled]="raceStore.isRacing()">Select</button>
+        <button (click)="store.deleteCar(car.id)" [disabled]="raceStore.isRacing()">Remove</button>
         <button
           (click)="raceStore.startEngine(car.id)"
           [disabled]="raceStore.getState(car.id).status !== 'idle'"
@@ -66,15 +64,8 @@
   }
 }
 
-<div class="pagination">
-  <button (click)="store.prevPage()" [disabled]="store.page() === 1">
-    Prev
-  </button>
-  <span>Page {{ store.page() }} / {{ store.totalPages() }}</span>
-  <button
-    (click)="store.nextPage()"
-    [disabled]="store.page() >= store.totalPages()"
-  >
-    Next
-  </button>
-</div>
+<button (click)="store.prevPage()"
+  [disabled]="store.page() === 1 || raceStore.isRacing()">Prev</button>
+<span>Page {{ store.page() }} / {{ store.totalPages() }}</span>
+<button (click)="store.nextPage()"
+  [disabled]="store.page() >= store.totalPages() || raceStore.isRacing()">Next</button>

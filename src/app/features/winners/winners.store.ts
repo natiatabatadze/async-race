@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { forkJoin } from 'rxjs';
+import { catchError, forkJoin, of } from 'rxjs';
 import { Car, Winner } from '../../core/models/car.model';
 import { WinnersService, SortField, SortOrder } from '../../core/services/winners.service';
 import { GarageService } from '../../core/services/garage.service';
@@ -32,15 +32,26 @@ export class WinnersStore {
   }
 
   private attachCars(winners: Winner[]): void {
-    if (winners.length === 0) {
-      this.rows.set([]);
-      return;
-    }
-    const requests = winners.map((w) => this.garageService.getCar(w.id));
-    forkJoin(requests).subscribe((cars) => {
-      this.rows.set(winners.map((w, i) => ({ ...w, car: cars[i] })));
-    });
+  if (winners.length === 0) {
+    this.rows.set([]);
+    return;
   }
+  const requests = winners.map((w) =>
+    this.garageService.getCar(w.id).pipe(
+      catchError(() => of(null)),
+    ),
+  );
+  forkJoin(requests).subscribe((cars) => {
+    this.rows.set(this.buildRows(winners, cars));
+  });
+}
+
+private buildRows(winners: Winner[], cars: (Car | null)[]): WinnerRow[] {
+  return winners
+    .map((w, i) => ({ winner: w, car: cars[i] }))
+    .filter((item) => item.car !== null)
+    .map((item) => ({ ...item.winner, car: item.car as Car }));
+}
 
   setPage(page: number): void {
     this.page.set(page);

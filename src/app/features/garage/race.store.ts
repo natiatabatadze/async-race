@@ -67,13 +67,25 @@ export class RaceStore {
   readonly winner = signal<{ car: Car; time: number } | null>(null);
   private raceActive = false;
 
+  readonly isRacing = signal(false);
+
   startRace(cars: Car[]): void {
+    this.resetStates(cars.map((car) => car.id));
+    this.isRacing.set(true);
     this.raceActive = true;
     this.winner.set(null);
     cars.forEach((car) => this.startEngineForRace(car));
   }
 
+  private resetStates(ids: number[]): void {
+    ids.forEach((id) => {
+      this.startTimes.delete(id);
+      this.setState(id, { status: 'idle', position: 0, duration: 0 });
+    });
+  }
+
   resetRace(ids: number[]): void {
+    this.isRacing.set(false);
     this.raceActive = false;
     this.winner.set(null);
     ids.forEach((id) => this.stopEngine(id));
@@ -95,11 +107,10 @@ export class RaceStore {
     });
   }
 
-
-
   private finish(car: Car, duration: number): void {
     if (!this.raceActive || this.winner()) return;
     this.raceActive = false;
+    this.isRacing.set(false);
     const seconds = Number((duration / 1000).toFixed(2));
     this.winner.set({ car, time: seconds });
     this.winnersService.saveWinner(car.id, seconds).subscribe();

@@ -1,6 +1,10 @@
 <nav>
   <a routerLink="/garage" routerLinkActive="active">Garage</a>
-  <a routerLink="/winners" routerLinkActive="active">Winners</a>
+  @if (raceStore.isRacing()) {
+    <span class="nav-disabled">Winners</span>
+  } @else {
+    <a routerLink="/winners" routerLinkActive="active">Winners</a>
+  }
 </nav>
 
 <router-outlet />
