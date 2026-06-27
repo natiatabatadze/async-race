@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "vitest",
-    "lint": "eslint src --max-warnings 0 --fix",
+    "lint": "eslint src --max-warnings 0",
+    "lint:fix": "eslint src --fix",
     "ci:format": "prettier --check src",
     "format": "prettier --write src"
   },
@@ -28,7 +29,7 @@
     "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^9.0.0",
     "angular-eslint": "18.4.3",
-    "eslint": "^8.57.1",
+    "eslint": "^9.0.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^4.4.5",
