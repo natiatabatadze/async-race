@@ -7,14 +7,20 @@
 <div class="create-panel">
   <input
     type="text"
-    [(ngModel)]="name"
+    [value]="store.formName()"
+    (input)="store.formName.set($any($event.target).value)"
     placeholder="Car name"
-    [maxlength]="maxLength"
+    [attr.maxlength]="maxLength"
     [disabled]="raceStore.isRacing()"
   />
-  <input type="color" [(ngModel)]="color" [disabled]="raceStore.isRacing()" />
+  <input
+    type="color"
+    [value]="store.formColor()"
+    (input)="store.formColor.set($any($event.target).value)"
+    [disabled]="raceStore.isRacing()"
+  />
   <button (click)="onSubmit()" [disabled]="!isValid() || raceStore.isRacing()">
-    {{ editingId() ? 'Update' : 'Create' }}
+    {{ store.editingId() ? 'Update' : 'Create' }}
   </button>
 </div>
 

@@ -30,23 +30,25 @@ export class GarageComponent implements OnInit {
   }
 
   isValid(): boolean {
-    return this.name.trim().length > 0;
+    return this.store.formName().trim().length > 0;
   }
 
   onSubmit(): void {
-    const id = this.editingId();
+    const id = this.store.editingId();
+    const name = this.store.formName().trim();
+    const color = this.store.formColor();
     if (id === null) {
-      this.store.createCar(this.name.trim(), this.color);
+      this.store.createCar(name, color);
     } else {
-      this.store.updateCar(id, this.name.trim(), this.color);
+      this.store.updateCar(id, name, color);
     }
-    this.resetForm();
+    this.store.resetForm();
   }
 
   onEdit(car: Car): void {
-    this.name = car.name;
-    this.color = car.color;
-    this.editingId.set(car.id);
+    this.store.formName.set(car.name);
+    this.store.formColor.set(car.color);
+    this.store.editingId.set(car.id);
   }
 
   private resetForm(): void {

@@ -6,6 +6,7 @@ import { CARS_PER_PAGE } from '../../core/constants/api.constants';
 import { randomCarName, randomColor } from '../../core/utils/random.util';
 import { RANDOM_CARS_COUNT } from '../../core/constants/car-names.constants';
 import { WinnersService } from '../../core/services/winners.service';
+import { DEFAULT_CAR_COLOR } from '../../core/constants/validation.constants';
 
 @Injectable({ providedIn: 'root' })
 export class GarageStore {
@@ -20,6 +21,18 @@ export class GarageStore {
   readonly page = signal(1);
 
   readonly totalPages = computed(() => Math.ceil(this.total() / CARS_PER_PAGE));
+
+  readonly formName = signal('');
+
+  readonly formColor = signal(DEFAULT_CAR_COLOR);
+
+  readonly editingId = signal<number | null>(null);
+
+  resetForm(): void {
+    this.formName.set('');
+    this.formColor.set(DEFAULT_CAR_COLOR);
+    this.editingId.set(null);
+  }
 
   loadCars(): void {
     this.garageService.getCars(this.page()).subscribe((res) => {
