@@ -17,10 +17,15 @@ export class WinnersService {
   private readonly http = inject(HttpClient);
 
   getWinners(page: number, sort: SortField, order: SortOrder): Observable<WinnersPage> {
-    const params = { _page: page, _limit: WINNERS_PER_PAGE, _sort: sort, _order: order };
+    const params = {
+      _page: page,
+      _limit: WINNERS_PER_PAGE,
+      _sort: sort,
+      _order: order,
+    };
     return this.http
       .get<Winner[]>(API_ENDPOINTS.winners, { params, observe: 'response' })
-      .pipe(map((res) => this.toWinnersPage(res)));
+      .pipe(map((res) => WinnersService.toWinnersPage(res)));
   }
 
   getWinner(id: number): Observable<Winner> {
@@ -39,7 +44,7 @@ export class WinnersService {
     return this.http.delete<void>(`${API_ENDPOINTS.winners}/${id}`);
   }
 
-  private toWinnersPage(res: HttpResponse<Winner[]>): WinnersPage {
+  private static toWinnersPage(res: HttpResponse<Winner[]>): WinnersPage {
     const total = Number(res.headers.get('X-Total-Count')) || 0;
     return { winners: res.body ?? [], total };
   }

@@ -1,7 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { EngineService } from '../../core/services/engine.service';
-import { CarRaceState } from '../../core/models/car.model';
-import { Car } from '../../core/models/car.model';
+import { CarRaceState, Car } from '../../core/models/car.model';
 import { WinnersService } from '../../core/services/winners.service';
 
 const FINISH_POSITION = 90;
@@ -11,9 +10,11 @@ const PERCENT = 100;
 @Injectable({ providedIn: 'root' })
 export class RaceStore {
   private readonly engineService = inject(EngineService);
+
   readonly states = signal<Map<number, CarRaceState>>(new Map());
 
   private readonly startTimes = new Map<number, number>();
+
   private readonly winnersService = inject(WinnersService);
 
   startEngine(id: number): void {
@@ -65,6 +66,7 @@ export class RaceStore {
   }
 
   readonly winner = signal<{ car: Car; time: number } | null>(null);
+
   private raceActive = false;
 
   readonly isRacing = signal(false);

@@ -19,6 +19,6 @@ export type CarStatus = 'idle' | 'driving' | 'finished' | 'broken';
 
 export interface CarRaceState {
   status: CarStatus;
-  position: number;   // 0–100 (%)
-  duration: number;   // ms
+  position: number; // 0–100 (%)
+  duration: number; // ms
 }

@@ -3,37 +3,35 @@
 @if (store.rows().length === 0) {
   <p>No winners yet</p>
 } @else {
-  <table class="winners-table">
-    <thead>
-      <tr>
-        <th>№</th>
-        <th>Car</th>
-        <th>Name</th>
-        <th class="sortable" (click)="store.setSort('wins')">
-          Wins {{ sortArrow('wins') }}
-        </th>
-        <th class="sortable" (click)="store.setSort('time')">
-          Best Time (s) {{ sortArrow('time') }}
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (row of store.rows(); track row.id; let i = $index) {
+  <div class="table-wrapper">
+    <table class="winners-table">
+      <thead>
         <tr>
-          <td>{{ rowNumber(i) }}</td>
-          <td><span [style.color]="row.car.color">🚗</span></td>
-          <td>{{ row.car.name }}</td>
-          <td>{{ row.wins }}</td>
-          <td>{{ row.time }}</td>
+          <th>№</th>
+          <th>Car</th>
+          <th>Name</th>
+          <th class="sortable" (click)="store.setSort('wins')">Wins {{ sortArrow('wins') }}</th>
+          <th class="sortable" (click)="store.setSort('time')">
+            Best Time (s) {{ sortArrow('time') }}
+          </th>
         </tr>
-      }
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        @for (row of store.rows(); track row.id; let i = $index) {
+          <tr>
+            <td>{{ rowNumber(i) }}</td>
+            <td><span [style.color]="row.car.color">🚗</span></td>
+            <td>{{ row.car.name }}</td>
+            <td>{{ row.wins }}</td>
+            <td>{{ row.time }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 
   <div class="pagination">
-    <button (click)="store.setPage(store.page() - 1)" [disabled]="store.page() === 1">
-      Prev
-    </button>
+    <button (click)="store.setPage(store.page() - 1)" [disabled]="store.page() === 1">Prev</button>
     <span>Page {{ store.page() }} / {{ store.totalPages() }}</span>
     <button
       (click)="store.setPage(store.page() + 1)"

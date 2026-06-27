@@ -17,10 +17,10 @@ export class GarageService {
     const params = { _page: page, _limit: CARS_PER_PAGE };
     return this.http
       .get<Car[]>(API_ENDPOINTS.garage, { params, observe: 'response' })
-      .pipe(map((res) => this.toCarsPage(res)));
+      .pipe(map((res) => GarageService.toCarsPage(res)));
   }
 
-  private toCarsPage(res: HttpResponse<Car[]>): CarsPage {
+  private static toCarsPage(res: HttpResponse<Car[]>): CarsPage {
     const total = Number(res.headers.get('X-Total-Count')) || 0;
     return { cars: res.body ?? [], total };
   }
@@ -45,5 +45,4 @@ export class GarageService {
   getCar(id: number): Observable<Car> {
     return this.http.get<Car>(`${API_ENDPOINTS.garage}/${id}`);
   }
-  
 }

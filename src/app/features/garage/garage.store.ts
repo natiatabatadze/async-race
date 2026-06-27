@@ -1,4 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
+import { catchError, of } from 'rxjs';
 import { Car } from '../../core/models/car.model';
 import { GarageService } from '../../core/services/garage.service';
 import { CARS_PER_PAGE } from '../../core/constants/api.constants';
@@ -9,10 +10,13 @@ import { WinnersService } from '../../core/services/winners.service';
 @Injectable({ providedIn: 'root' })
 export class GarageStore {
   private readonly garageService = inject(GarageService);
+
   private readonly winnersService = inject(WinnersService);
 
   readonly cars = signal<Car[]>([]);
+
   readonly total = signal(0);
+
   readonly page = signal(1);
 
   readonly totalPages = computed(() => Math.ceil(this.total() / CARS_PER_PAGE));
@@ -68,7 +72,10 @@ export class GarageStore {
 
   deleteCar(id: number): void {
     this.garageService.deleteCar(id).subscribe(() => {
-      this.winnersService.deleteWinner(id).subscribe({ error: () => {} });
+      this.winnersService
+        .deleteWinner(id)
+        .pipe(catchError(() => of(undefined)))
+        .subscribe();
       this.reloadAfterDelete();
     });
   }

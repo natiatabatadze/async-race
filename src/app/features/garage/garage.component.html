@@ -1,14 +1,17 @@
 @if (raceStore.winner(); as winner) {
-  <div class="winner-banner">
-    🏆 {{ winner.car.name }} won! ({{ winner.time }}s)
-  </div>
+  <div class="winner-banner">🏆 {{ winner.car.name }} won! ({{ winner.time }}s)</div>
 }
 
 <h1>Garage ({{ store.total() }})</h1>
 
 <div class="create-panel">
-  <input type="text" [(ngModel)]="name" placeholder="Car name"
-    [maxlength]="maxLength" [disabled]="raceStore.isRacing()" />
+  <input
+    type="text"
+    [(ngModel)]="name"
+    placeholder="Car name"
+    [maxlength]="maxLength"
+    [disabled]="raceStore.isRacing()"
+  />
   <input type="color" [(ngModel)]="color" [disabled]="raceStore.isRacing()" />
   <button (click)="onSubmit()" [disabled]="!isValid() || raceStore.isRacing()">
     {{ editingId() ? 'Update' : 'Create' }}
@@ -50,7 +53,7 @@
       </div>
 
       <div class="track">
-       <div
+        <div
           class="car-icon"
           [style.color]="car.color"
           [style.left.%]="raceStore.getState(car.id).position"
@@ -64,8 +67,13 @@
   }
 }
 
-<button (click)="store.prevPage()"
-  [disabled]="store.page() === 1 || raceStore.isRacing()">Prev</button>
+<button (click)="store.prevPage()" [disabled]="store.page() === 1 || raceStore.isRacing()">
+  Prev
+</button>
 <span>Page {{ store.page() }} / {{ store.totalPages() }}</span>
-<button (click)="store.nextPage()"
-  [disabled]="store.page() >= store.totalPages() || raceStore.isRacing()">Next</button>
+<button
+  (click)="store.nextPage()"
+  [disabled]="store.page() >= store.totalPages() || raceStore.isRacing()"
+>
+  Next
+</button>

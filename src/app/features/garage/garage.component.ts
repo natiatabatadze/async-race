@@ -2,10 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GarageStore } from './garage.store';
 import { Car } from '../../core/models/car.model';
-import {
-  CAR_NAME_MAX_LENGTH,
-  DEFAULT_CAR_COLOR,
-} from '../../core/constants/validation.constants';
+import { CAR_NAME_MAX_LENGTH, DEFAULT_CAR_COLOR } from '../../core/constants/validation.constants';
 import { RaceStore } from './race.store';
 
 @Component({
@@ -17,11 +14,15 @@ import { RaceStore } from './race.store';
 })
 export class GarageComponent implements OnInit {
   readonly store = inject(GarageStore);
+
   readonly raceStore = inject(RaceStore);
+
   readonly maxLength = CAR_NAME_MAX_LENGTH;
 
   name = '';
+
   color = DEFAULT_CAR_COLOR;
+
   readonly editingId = signal<number | null>(null);
 
   ngOnInit(): void {
