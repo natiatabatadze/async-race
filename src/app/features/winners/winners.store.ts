@@ -34,10 +34,14 @@ export class WinnersStore {
 
   readonly totalPages = computed(() => Math.ceil(this.total() / WINNERS_PER_PAGE));
 
+  readonly loading = signal(false);
+
   loadWinners(): void {
+    this.loading.set(true);
     this.winnersService.getWinners(this.page(), this.sort(), this.order()).subscribe((res) => {
       this.total.set(res.total);
       this.attachCars(res.winners);
+      this.loading.set(false);
     });
   }
 

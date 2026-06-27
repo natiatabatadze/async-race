@@ -1,3 +1,48 @@
+nav {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: white;
+  box-shadow: 0 2px 12px var(--shadow);
+  margin-bottom: 1.5rem;
+
+  a,
+  .nav-disabled {
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.5rem 1.2rem;
+    border-radius: var(--radius-sm);
+    color: var(--ink-soft);
+    transition: all 0.15s ease;
+  }
+
+  a:hover {
+    background: var(--cream);
+    color: var(--ink);
+  }
+
+  a.active {
+    background: var(--sage);
+    color: white;
+  }
+
+  .nav-disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1.5rem 3rem;
+}
+
+h1 {
+  font-weight: 700;
+  color: var(--ink);
+}
+
 .nav-disabled {
   opacity: 0.4;
   cursor: not-allowed;

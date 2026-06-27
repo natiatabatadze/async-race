@@ -1,6 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
+import { catchError, EMPTY, forkJoin } from 'rxjs';
 import { EngineService } from '../../core/services/engine.service';
-import { CarRaceState, Car } from '../../core/models/car.model';
+import { CarRaceState, Car, EngineResponse } from '../../core/models/car.model';
 import { WinnersService } from '../../core/services/winners.service';
 
 const FINISH_POSITION = 90;
@@ -16,6 +17,21 @@ export class RaceStore {
   private readonly startTimes = new Map<number, number>();
 
   private readonly winnersService = inject(WinnersService);
+
+  readonly winner = signal<{ car: Car; time: number } | null>(null);
+
+  private raceActive = false;
+
+  readonly isRacing = signal(false);
+
+  readonly preparing = signal(false);
+
+  private launchCar(car: Car, res: EngineResponse): void {
+    const duration = res.distance / res.velocity;
+    this.startTimes.set(car.id, performance.now());
+    this.setState(car.id, { status: 'driving', position: FINISH_POSITION, duration });
+    this.driveForRace(car, duration);
+  }
 
   startEngine(id: number): void {
     this.engineService.toggleEngine(id, 'started').subscribe((res) => {
@@ -65,18 +81,25 @@ export class RaceStore {
     return this.states().get(id) ?? { status: 'idle', position: START_POSITION, duration: 0 };
   }
 
-  readonly winner = signal<{ car: Car; time: number } | null>(null);
-
-  private raceActive = false;
-
-  readonly isRacing = signal(false);
-
   startRace(cars: Car[]): void {
     this.resetStates(cars.map((car) => car.id));
+    this.preparing.set(true);
     this.isRacing.set(true);
     this.raceActive = true;
     this.winner.set(null);
-    cars.forEach((car) => this.startEngineForRace(car));
+
+    const requests = cars.map((car) => this.engineService.toggleEngine(car.id, 'started'));
+
+    forkJoin(requests).subscribe({
+      next: (responses) => {
+        this.preparing.set(false);
+        responses.forEach((res, i) => this.launchCar(cars[i], res));
+      },
+      error: () => {
+        this.preparing.set(false);
+        this.isRacing.set(false);
+      },
+    });
   }
 
   private resetStates(ids: number[]): void {
@@ -86,20 +109,23 @@ export class RaceStore {
     });
   }
 
+  dismissWinner(): void {
+    this.winner.set(null);
+  }
+
   resetRace(ids: number[]): void {
     this.isRacing.set(false);
     this.raceActive = false;
     this.winner.set(null);
-    ids.forEach((id) => this.stopEngine(id));
+    this.resetStates(ids);
+    ids.forEach((id) => this.stopEngineSilently(id));
   }
 
-  private startEngineForRace(car: Car): void {
-    this.engineService.toggleEngine(car.id, 'started').subscribe((res) => {
-      const duration = res.distance / res.velocity;
-      this.startTimes.set(car.id, performance.now());
-      this.setState(car.id, { status: 'driving', position: FINISH_POSITION, duration });
-      this.driveForRace(car, duration);
-    });
+  private stopEngineSilently(id: number): void {
+    this.engineService
+      .toggleEngine(id, 'stopped')
+      .pipe(catchError(() => EMPTY))
+      .subscribe();
   }
 
   private driveForRace(car: Car, duration: number): void {
@@ -113,6 +139,12 @@ export class RaceStore {
     if (!this.raceActive || this.winner()) return;
     this.raceActive = false;
     this.isRacing.set(false);
+
+    const current = this.states().get(car.id);
+    if (current) {
+      this.setState(car.id, { ...current, status: 'finished', duration: 0 });
+    }
+
     const seconds = Number((duration / 1000).toFixed(2));
     this.winner.set({ car, time: seconds });
     this.winnersService.saveWinner(car.id, seconds).subscribe();

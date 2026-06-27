@@ -2,12 +2,15 @@ import { Component, inject, OnInit } from '@angular/core';
 import { WinnersStore } from './winners.store';
 import { SortField } from '../../core/services/winners.service';
 import { WINNERS_PER_PAGE } from '../../core/constants/api.constants';
+import { CarIconComponent } from '../../shared/components/car-icon/car-icon.component';
+import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-winners',
   standalone: true,
   templateUrl: './winners.component.html',
   styleUrl: './winners.component.scss',
+  imports: [CarIconComponent, SpinnerComponent],
 })
 export class WinnersComponent implements OnInit {
   readonly store = inject(WinnersStore);

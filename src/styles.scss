@@ -1,1 +1,91 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --sage: #9caf88;
+  --terracotta: #d96c54;
+  --dusty-purple: #8b86a8;
+  --mustard: #f0c040;
+  --cream: #faf6ef;
+  --ink: #4a4a52;
+  --ink-soft: #7a7a85;
+  --border: #e6ded2;
+  --shadow: rgba(74, 74, 82, 0.12);
+
+  --radius: 14px;
+  --radius-sm: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+}
+
+button {
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--sage);
+  color: white;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    filter 0.15s ease;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.12);
+}
+
+button:hover:not(:disabled) {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.12);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
+}
+
+button:disabled {
+  background: #cfc8bd;
+  color: #f0ece4;
+  cursor: not-allowed;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.06);
+}
+
+.btn-race {
+  background: var(--terracotta);
+}
+
+.btn-reset {
+  background: var(--dusty-purple);
+}
+
+.btn-generate {
+  background: var(--mustard);
+  color: var(--ink);
+}
+
+.btn-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

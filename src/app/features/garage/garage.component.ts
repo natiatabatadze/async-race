@@ -4,11 +4,13 @@ import { GarageStore } from './garage.store';
 import { Car } from '../../core/models/car.model';
 import { CAR_NAME_MAX_LENGTH, DEFAULT_CAR_COLOR } from '../../core/constants/validation.constants';
 import { RaceStore } from './race.store';
+import { CarIconComponent } from '../../shared/components/car-icon/car-icon.component';
+import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-garage',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CarIconComponent, SpinnerComponent],
   templateUrl: './garage.component.html',
   styleUrl: './garage.component.scss',
 })

@@ -1,5 +1,16 @@
 @if (raceStore.winner(); as winner) {
-  <div class="winner-banner">🏆 {{ winner.car.name }} won! ({{ winner.time }}s)</div>
+  <div class="modal-overlay">
+    <div class="modal">
+      <div class="modal-trophy">🏆</div>
+      <h2 class="modal-title">Winner!</h2>
+      <p class="modal-car">
+        <app-car-icon [color]="winner.car.color" [size]="80" />
+      </p>
+      <p class="modal-name">{{ winner.car.name }}</p>
+      <p class="modal-time">{{ winner.time }}s</p>
+      <button class="btn-race" (click)="raceStore.dismissWinner()">Close</button>
+    </div>
+  </div>
 }
 
 <h1>Garage ({{ store.total() }})</h1>
@@ -25,61 +36,85 @@
 </div>
 
 <div class="race-controls">
-  <button (click)="store.generateRandomCars()">Generate 100 cars</button>
-</div>
+  <button class="btn-race" (click)="onStartRace()" [disabled]="raceStore.isRacing()">
+    @if (raceStore.preparing()) {
+      <span class="btn-spinner"></span> Starting...
+    } @else {
+      Start Race
+    }
+  </button>
 
-<div class="race-controls">
-  <button (click)="onStartRace()" [disabled]="raceStore.isRacing()">Start Race</button>
-  <button (click)="onResetRace()" [disabled]="!raceStore.isRacing()">Reset Race</button>
-  <button (click)="store.generateRandomCars()" [disabled]="raceStore.isRacing()">
-    Generate 100 cars
+  <button class="btn-reset" (click)="onResetRace()" [disabled]="raceStore.isRacing()">
+    Reset Race
+  </button>
+  <button
+    class="btn-generate"
+    (click)="store.generateRandomCars()"
+    [disabled]="raceStore.isRacing()"
+  >
+    Generate 100
   </button>
 </div>
 
-@if (store.cars().length === 0) {
-  <p>🚗 No cars in garage. Create one or generate 100!</p>
+@if (store.loading()) {
+  <app-spinner />
+} @else if (store.cars().length === 0) {
+  <p>No cars in garage. Create one or generate 100!</p>
 } @else {
   @for (car of store.cars(); track car.id) {
     <div class="car-row">
       <div class="car-controls">
-        <button (click)="onEdit(car)" [disabled]="raceStore.isRacing()">Select</button>
-        <button (click)="store.deleteCar(car.id)" [disabled]="raceStore.isRacing()">Remove</button>
-        <button
-          (click)="raceStore.startEngine(car.id)"
-          [disabled]="raceStore.getState(car.id).status !== 'idle'"
-        >
-          A
-        </button>
-        <button
-          (click)="raceStore.stopEngine(car.id)"
-          [disabled]="raceStore.getState(car.id).status === 'idle'"
-        >
-          B
-        </button>
+        <div class="engine-btns">
+          <button
+            class="btn-go"
+            (click)="raceStore.startEngine(car.id)"
+            [disabled]="raceStore.getState(car.id).status !== 'idle'"
+          >
+            A
+          </button>
+          <button
+            class="btn-stop"
+            (click)="raceStore.stopEngine(car.id)"
+            [disabled]="raceStore.getState(car.id).status === 'idle'"
+          >
+            B
+          </button>
+        </div>
+        <div class="mgmt-btns">
+          <button (click)="onEdit(car)" [disabled]="raceStore.isRacing()">Select</button>
+          <button (click)="store.deleteCar(car.id)" [disabled]="raceStore.isRacing()">
+            Remove
+          </button>
+        </div>
       </div>
 
       <div class="track">
         <div
           class="car-icon"
-          [style.color]="car.color"
           [style.left.%]="raceStore.getState(car.id).position"
-          [style.transition]="'left ' + raceStore.getState(car.id).duration + 'ms linear'"
+          [style.transition]="
+            raceStore.getState(car.id).status === 'driving'
+              ? 'left ' + raceStore.getState(car.id).duration + 'ms linear'
+              : 'none'
+          "
         >
-          🚗
+          <app-car-icon [color]="car.color" [size]="60" />
         </div>
         <span class="car-name">{{ car.name }}</span>
       </div>
     </div>
   }
-}
 
-<button (click)="store.prevPage()" [disabled]="store.page() === 1 || raceStore.isRacing()">
-  Prev
-</button>
-<span>Page {{ store.page() }} / {{ store.totalPages() }}</span>
-<button
-  (click)="store.nextPage()"
-  [disabled]="store.page() >= store.totalPages() || raceStore.isRacing()"
->
-  Next
-</button>
+  <div class="pagination">
+    <button (click)="store.prevPage()" [disabled]="store.page() === 1 || raceStore.isRacing()">
+      Prev
+    </button>
+    <span>Page {{ store.page() }} / {{ store.totalPages() }}</span>
+    <button
+      (click)="store.nextPage()"
+      [disabled]="store.page() >= store.totalPages() || raceStore.isRacing()"
+    >
+      Next
+    </button>
+  </div>
+}

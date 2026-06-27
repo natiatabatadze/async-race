@@ -28,17 +28,24 @@ export class GarageStore {
 
   readonly editingId = signal<number | null>(null);
 
+  readonly loading = signal(false);
+
+  loadCars(): void {
+    this.loading.set(true);
+    this.garageService.getCars(this.page()).subscribe({
+      next: (res) => {
+        this.cars.set(res.cars);
+        this.total.set(res.total);
+        this.loading.set(false);
+      },
+      error: () => this.loading.set(false),
+    });
+  }
+
   resetForm(): void {
     this.formName.set('');
     this.formColor.set(DEFAULT_CAR_COLOR);
     this.editingId.set(null);
-  }
-
-  loadCars(): void {
-    this.garageService.getCars(this.page()).subscribe((res) => {
-      this.cars.set(res.cars);
-      this.total.set(res.total);
-    });
   }
 
   setPage(page: number): void {
