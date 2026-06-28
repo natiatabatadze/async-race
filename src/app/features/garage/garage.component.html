@@ -94,7 +94,7 @@
           <button
             class="btn-stop"
             (click)="raceStore.stopEngine(car.id)"
-            [disabled]="raceStore.getState(car.id).status === 'idle'"
+            [disabled]="raceStore.getState(car.id).status === 'idle' || raceStore.isRacing()"
           >
             B
           </button>
