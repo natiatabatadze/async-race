@@ -111,44 +111,30 @@
   }
 }
 
-.winner-banner {
-  padding: 1rem 1.5rem;
-  margin: 1rem 0;
-  background: var(--mustard);
-  color: var(--ink);
-  font-weight: 700;
-  font-size: 1.1rem;
-  text-align: center;
-  border-radius: var(--radius);
-  box-shadow: 0 4px 0 #d4a020;
-  animation: pop 0.4s ease;
+.btn-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 4px;
 }
 
-@keyframes pop {
-  0% {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-  60% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
-.pagination {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  justify-content: center;
-  margin-top: 1.5rem;
+.btn-go {
+  background: var(--sage);
+}
 
-  span {
-    font-weight: 600;
-    color: var(--ink-soft);
-  }
+.btn-stop {
+  background: var(--terracotta);
 }
 
 .modal-overlay {

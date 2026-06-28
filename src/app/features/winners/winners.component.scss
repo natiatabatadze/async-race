@@ -49,19 +49,6 @@
   overflow-x: auto;
 }
 
-.pagination {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  justify-content: center;
-  margin-top: 1.5rem;
-
-  span {
-    font-weight: 600;
-    color: var(--ink-soft);
-  }
-}
-
 @media (max-width: 500px) {
   .winners-table {
     font-size: 0.8rem;

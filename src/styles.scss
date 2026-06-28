@@ -72,20 +72,15 @@ button:disabled {
   color: var(--ink);
 }
 
-.btn-spinner {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  vertical-align: middle;
-  margin-right: 4px;
-}
+.pagination {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.5rem;
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+  span {
+    font-weight: 600;
+    color: var(--ink-soft);
   }
 }
