@@ -21,29 +21,32 @@ export class GarageComponent implements OnInit {
 
   readonly maxLength = CAR_NAME_MAX_LENGTH;
 
-  name = '';
+  readonly createName = signal('');
 
-  color = DEFAULT_CAR_COLOR;
-
-  readonly editingId = signal<number | null>(null);
+  readonly createColor = signal(DEFAULT_CAR_COLOR);
 
   ngOnInit(): void {
     this.store.loadCars();
   }
 
-  isValid(): boolean {
+  isCreateValid(): boolean {
+    return this.createName().trim().length > 0;
+  }
+
+  isUpdateValid(): boolean {
     return this.store.formName().trim().length > 0;
   }
 
-  onSubmit(): void {
+  onCreate(): void {
+    this.store.createCar(this.createName().trim(), this.createColor());
+    this.createName.set('');
+    this.createColor.set(DEFAULT_CAR_COLOR);
+  }
+
+  onUpdate(): void {
     const id = this.store.editingId();
-    const name = this.store.formName().trim();
-    const color = this.store.formColor();
-    if (id === null) {
-      this.store.createCar(name, color);
-    } else {
-      this.store.updateCar(id, name, color);
-    }
+    if (id === null) return;
+    this.store.updateCar(id, this.store.formName().trim(), this.store.formColor());
     this.store.resetForm();
   }
 
@@ -51,12 +54,6 @@ export class GarageComponent implements OnInit {
     this.store.formName.set(car.name);
     this.store.formColor.set(car.color);
     this.store.editingId.set(car.id);
-  }
-
-  private resetForm(): void {
-    this.name = '';
-    this.color = DEFAULT_CAR_COLOR;
-    this.editingId.set(null);
   }
 
   onStartRace(): void {

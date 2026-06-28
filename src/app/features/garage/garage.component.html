@@ -16,24 +16,45 @@
 <h1>Garage ({{ store.total() }})</h1>
 
 <div class="create-panel">
+  <span class="panel-label">Create</span>
   <input
     type="text"
-    [value]="store.formName()"
-    (input)="store.formName.set($any($event.target).value)"
+    [value]="createName()"
+    (input)="createName.set($any($event.target).value)"
     placeholder="Car name"
     [attr.maxlength]="maxLength"
     [disabled]="raceStore.isRacing()"
   />
   <input
     type="color"
-    [value]="store.formColor()"
-    (input)="store.formColor.set($any($event.target).value)"
+    [value]="createColor()"
+    (input)="createColor.set($any($event.target).value)"
     [disabled]="raceStore.isRacing()"
   />
-  <button (click)="onSubmit()" [disabled]="!isValid() || raceStore.isRacing()">
-    {{ store.editingId() ? 'Update' : 'Create' }}
+  <button (click)="onCreate()" [disabled]="!isCreateValid() || raceStore.isRacing()">
+    Create
   </button>
 </div>
+
+@if (store.editingId() !== null) {
+  <div class="create-panel update-panel">
+    <span class="panel-label">Update</span>
+    <input
+      type="text"
+      [value]="store.formName()"
+      (input)="store.formName.set($any($event.target).value)"
+      placeholder="Car name"
+      [attr.maxlength]="maxLength"
+    />
+    <input
+      type="color"
+      [value]="store.formColor()"
+      (input)="store.formColor.set($any($event.target).value)"
+    />
+    <button (click)="onUpdate()" [disabled]="!isUpdateValid()">Update</button>
+    <button class="btn-reset" (click)="store.resetForm()">Cancel</button>
+  </div>
+}
 
 <div class="race-controls">
   <button class="btn-race" (click)="onStartRace()" [disabled]="raceStore.isRacing()">
