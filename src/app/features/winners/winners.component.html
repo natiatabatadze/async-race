@@ -22,11 +22,7 @@
         @for (row of store.rows(); track row.id; let i = $index) {
           <tr>
             <td>{{ rowNumber(i) }}</td>
-            <td>
-              <span [style.color]="row.car.color"
-                ><td><app-car-icon [color]="row.car.color" [size]="60" /></td
-              ></span>
-            </td>
+            <td><app-car-icon [color]="row.car.color" [size]="40" /></td>
             <td>{{ row.car.name }}</td>
             <td>{{ row.wins }}</td>
             <td>{{ row.time }}</td>

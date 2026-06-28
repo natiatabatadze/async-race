@@ -1,8 +1,8 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GarageStore } from './garage.store';
 import { Car } from '../../core/models/car.model';
-import { CAR_NAME_MAX_LENGTH, DEFAULT_CAR_COLOR } from '../../core/constants/validation.constants';
+import { CAR_NAME_MAX_LENGTH } from '../../core/constants/validation.constants';
 import { RaceStore } from './race.store';
 import { CarIconComponent } from '../../shared/components/car-icon/car-icon.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
@@ -21,16 +21,12 @@ export class GarageComponent implements OnInit {
 
   readonly maxLength = CAR_NAME_MAX_LENGTH;
 
-  readonly createName = signal('');
-
-  readonly createColor = signal(DEFAULT_CAR_COLOR);
-
   ngOnInit(): void {
     this.store.loadCars();
   }
 
   isCreateValid(): boolean {
-    return this.createName().trim().length > 0;
+    return this.store.createName().trim().length > 0;
   }
 
   isUpdateValid(): boolean {
@@ -38,9 +34,8 @@ export class GarageComponent implements OnInit {
   }
 
   onCreate(): void {
-    this.store.createCar(this.createName().trim(), this.createColor());
-    this.createName.set('');
-    this.createColor.set(DEFAULT_CAR_COLOR);
+    this.store.createCar(this.store.createName().trim(), this.store.createColor());
+    this.store.resetCreateForm();
   }
 
   onUpdate(): void {

@@ -30,6 +30,15 @@ export class GarageStore {
 
   readonly loading = signal(false);
 
+  readonly createName = signal('');
+
+  readonly createColor = signal(DEFAULT_CAR_COLOR);
+
+  resetCreateForm(): void {
+    this.createName.set('');
+    this.createColor.set(DEFAULT_CAR_COLOR);
+  }
+
   loadCars(): void {
     this.loading.set(true);
     this.garageService.getCars(this.page()).subscribe({

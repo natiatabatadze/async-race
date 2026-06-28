@@ -19,21 +19,19 @@
   <span class="panel-label">Create</span>
   <input
     type="text"
-    [value]="createName()"
-    (input)="createName.set($any($event.target).value)"
+    [value]="store.createName()"
+    (input)="store.createName.set($any($event.target).value)"
     placeholder="Car name"
     [attr.maxlength]="maxLength"
     [disabled]="raceStore.isRacing()"
   />
   <input
     type="color"
-    [value]="createColor()"
-    (input)="createColor.set($any($event.target).value)"
+    [value]="store.createColor()"
+    (input)="store.createColor.set($any($event.target).value)"
     [disabled]="raceStore.isRacing()"
   />
-  <button (click)="onCreate()" [disabled]="!isCreateValid() || raceStore.isRacing()">
-    Create
-  </button>
+  <button (click)="onCreate()" [disabled]="!isCreateValid() || raceStore.isRacing()">Create</button>
 </div>
 
 @if (store.editingId() !== null) {
